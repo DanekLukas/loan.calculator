@@ -1,15 +1,19 @@
-import { Col, Form, InputNumber, Row, Slider } from 'antd'
+import { Col, Form, InputNumber, Row, Slider, Typography } from 'antd'
+import { Dispatch, KeyboardEvent, ReactNode, SetStateAction, useState } from 'react'
 import { MarkObj } from 'rc-slider/lib/Marks'
 import { ValidateStatus } from 'antd/lib/form/FormItem'
-import React, { KeyboardEvent, ReactNode, useState } from 'react'
 
 type Props = {
+  title: string
   units: string
   min: number
   max: number
   helpS: { press: string; change: string }
   step: number
   initVal: number
+  inputValue: number
+  setInputValue: Dispatch<SetStateAction<number>>
+  under?: ReactNode
 }
 
 const addSpaces = (num: number) => {
@@ -21,15 +25,28 @@ const addSpaces = (num: number) => {
   return rev.reverse().join('')
 }
 
-const CustomSlider = ({ units, min, max, helpS, step, initVal }: Props) => {
+const CustomSlider = ({
+  title,
+  units,
+  min,
+  max,
+  helpS,
+  step,
+  inputValue,
+  setInputValue,
+  under,
+}: Props) => {
+  const { Title } = Typography
   const marks: Record<string | number, ReactNode | MarkObj> = {}
-  marks[min] = addSpaces(min) + ' ' + units
-  marks[max] = addSpaces(max) + ' ' + units
-  const [inputValue, setInputValue] = useState(initVal)
+  marks[min] = (
+    <div style={{ width: 'fit', marginLeft: '3.5rem' }}>{addSpaces(min) + ' ' + units}</div>
+  )
+  marks[max] = (
+    <div style={{ width: '5rem', marginLeft: '-3.5rem' }}>{addSpaces(max) + ' ' + units}</div>
+  )
   const [error, setError] = useState<ValidateStatus>()
   const [help, setHelp] = useState('')
   const onChange = (newValue: number) => {
-    console.info(newValue)
     if (newValue < min || newValue > max) {
       setError('error')
       setHelp(helpS.change)
@@ -55,9 +72,14 @@ const CustomSlider = ({ units, min, max, helpS, step, initVal }: Props) => {
     }
   }
   return (
-    <Form>
+    <>
       <Row>
-        <Col span={12}>
+        <Col span={20}>
+          <Title level={4}>{title}</Title>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={17}>
           <Slider
             min={min}
             max={max}
@@ -68,13 +90,14 @@ const CustomSlider = ({ units, min, max, helpS, step, initVal }: Props) => {
             value={typeof inputValue === 'number' ? inputValue : min}
           ></Slider>
         </Col>
-        <Col span={4}>
+        <Col span={5}>
           <Form.Item validateStatus={error} help={help}>
             <InputNumber
               min={min}
               max={max}
               style={{
                 margin: '0 16px',
+                width: '7rem',
               }}
               value={typeof inputValue === 'number' ? inputValue : min}
               onKeyPress={onKeyPress}
@@ -84,7 +107,13 @@ const CustomSlider = ({ units, min, max, helpS, step, initVal }: Props) => {
         </Col>
         <Col span={1}>{units}</Col>
       </Row>
-    </Form>
+      {under && (
+        <Row>
+          <Col span={16}></Col>
+          <Col span={1}>{under}</Col>
+        </Row>
+      )}
+    </>
   )
 }
 export default CustomSlider

@@ -1,1 +1,4 @@
 @import '~antd/dist/antd.css';
+.wrapper {
+  padding: 2rem;
+}
