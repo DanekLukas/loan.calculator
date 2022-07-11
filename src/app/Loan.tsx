@@ -1,21 +1,50 @@
 import './index.css'
 import { Col, Form, Radio, Row, Space, Typography } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CustomSlider from './Component/CustomSlider'
+import ReactMarkdown from 'react-markdown'
+import axios from 'axios'
+
+export const addSpaces = (num: number) => {
+  const spaceAfter = 3
+  const rev = num.toString().split('').reverse()
+  for (let i = Math.floor((rev.length - 1) / spaceAfter); i > 0; i--) {
+    rev.splice(spaceAfter * i, 0, ' ')
+  }
+  return rev.reverse().join('')
+}
 
 const Loan = () => {
   const min = 20000
   const max = 800000
   const initVal = 100000
+  const units = 'Kč'
   const minM = 24
   const maxM = 96
   const initValM = 48
+  const rate = 6
+  const ensure = 4500
 
-  const [loan, setLoan] = useState<number>(initVal)
-  const [paid, setPaid] = useState<number>(initValM)
+  const [amount, setAmount] = useState(initVal)
+  const [termMonths, setTermMonths] = useState(initValM)
   const [ensurance, setEnsurance] = useState(false)
+  const [calc, setCalc] = useState(0.0)
 
   const { Paragraph, Title } = Typography
+
+  useEffect(() => {
+    const getCalc = async () => {
+      const { data } = (
+        await axios.post('http://localhost:8190/calc', {
+          amount: amount,
+          rate: rate,
+          termMonths: termMonths,
+        })
+      ).data as { data?: number; error?: string }
+      setCalc(data || 0)
+    }
+    getCalc()
+  }, [amount, termMonths, ensurance])
 
   return (
     <div>
@@ -29,7 +58,7 @@ const Loan = () => {
             </Row>
             <CustomSlider
               title='Kolik si chci půjčit'
-              units='Kč'
+              units={units}
               min={min}
               max={max}
               step={1000}
@@ -38,8 +67,8 @@ const Loan = () => {
                 press: 'Povolené znaky jsou číslice',
                 change: `Povolené hodnoty jsou v rozmezí od ${min} do ${max}.`,
               }}
-              inputValue={loan}
-              setInputValue={setLoan}
+              inputValue={amount}
+              setInputValue={setAmount}
             />
             <CustomSlider
               title='Na jak dlouho'
@@ -52,13 +81,23 @@ const Loan = () => {
                 press: 'Povolené znaky jsou číslice',
                 change: `Povolené hodnoty jsou v rozmezí od ${min} do ${max}.`,
               }}
-              inputValue={paid}
-              setInputValue={setPaid}
+              inputValue={termMonths}
+              setInputValue={setTermMonths}
               under={(() => {
-                const years = Math.floor(paid / 12)
-                return years > 1
-                  ? years + [' rok', ' roky', ' let'][0 + (years > 1 ? 1 : 0) + (years > 4 ? 1 : 0)]
-                  : undefined
+                const years = Math.floor(termMonths / 12)
+                const extra = termMonths - years * 12
+                return (
+                  (years > 0
+                    ? `${years} ${
+                        ['rok', 'roky', 'let'][0 + (years > 1 ? 1 : 0) + (years > 4 ? 1 : 0)]
+                      }`
+                    : '') +
+                  (extra > 0
+                    ? ` a ${extra} ${
+                        ['měsíc', 'měsíce', 'měsíců'][0 + (extra > 1 ? 1 : 0) + (extra > 4 ? 1 : 0)]
+                      }`
+                    : '')
+                )
               })()}
             />
             <Row>
@@ -78,10 +117,16 @@ const Loan = () => {
             </Row>
             <Row>
               <Col span={21}>
-                <Paragraph style={{ marginTop: '2rem' }}>
-                  Úroková sazna od 6 % RPSN od 7 % pojištění 0 Kč/měsíčně, poplatek za sjednání
-                  online 0 Kč, celkem zaplatíte 130 406,44 Kč.
-                </Paragraph>
+                <ReactMarkdown>
+                  {`Úroková sazba od **${rate} %** RPSN od **7.11 %** pojištění **${
+                    ensure * (ensurance ? 1 : 0)
+                  } ${units}/měsíčně**, poplatek za sjednání
+                  online **0 ${units}**, celkem zaplatíte **${((months, calc) => {
+                    const comp = months * calc + ensure * (ensurance ? 1 : 0)
+                    const arStr = comp.toFixed(2).split('.')
+                    return [addSpaces(parseInt(arStr[0])), arStr[1]].join(',')
+                  })(termMonths, calc)} ${units}**.`}
+                </ReactMarkdown>
               </Col>
             </Row>
           </Form>
@@ -99,7 +144,7 @@ const Loan = () => {
             Měsíčně zaplatíte
           </Title>
           <Title level={1} style={{ color: 'white', margin: 'auto', fontWeight: 300 }}>
-            Kč
+            {`${calc} Kč`}
           </Title>
         </div>
       </div>

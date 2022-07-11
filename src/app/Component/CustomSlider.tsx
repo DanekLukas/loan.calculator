@@ -2,6 +2,7 @@ import { Col, Form, Input, Row, Slider, Typography } from 'antd'
 import { Dispatch, KeyboardEvent, ReactNode, SetStateAction, useState } from 'react'
 import { MarkObj } from 'rc-slider/lib/Marks'
 import { ValidateStatus } from 'antd/lib/form/FormItem'
+import { addSpaces } from '../Loan'
 
 type Props = {
   title: string
@@ -14,15 +15,6 @@ type Props = {
   inputValue: number
   setInputValue: Dispatch<SetStateAction<number>>
   under?: ReactNode
-}
-
-const addSpaces = (num: number) => {
-  const spaceAfter = 3
-  const rev = num.toString().split('').reverse()
-  for (let i = Math.floor(rev.length / spaceAfter); i > 0; i--) {
-    rev.splice(spaceAfter * i, 0, ' ')
-  }
-  return rev.reverse().join('')
 }
 
 const CustomSlider = ({
@@ -123,7 +115,7 @@ const CustomSlider = ({
       {under && (
         <Row>
           <Col span={18}></Col>
-          <Col span={2}>{under}</Col>
+          <Col span={5}>{under}</Col>
         </Row>
       )}
     </>
