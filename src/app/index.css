@@ -2,3 +2,19 @@
 .wrapper {
   padding: 2rem;
 }
+
+.container {
+  display: flex;
+  align-items: 'row';
+}
+
+.green-button {
+  width: fit;
+  background-color: #3FB360;
+  color: #fff;
+  display: inline-block;
+  font-weight: 400;
+  margin: auto;
+  height: 3rem;
+  border: none;
+}

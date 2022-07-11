@@ -1,9 +1,10 @@
 import './index.css'
-import { Col, Form, Radio, Row, Space, Typography } from 'antd'
+import { Button, Col, Form, Radio, Row, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import CustomSlider from './Component/CustomSlider'
 import ReactMarkdown from 'react-markdown'
 import axios from 'axios'
+import styled from '@emotion/styled'
 
 export const addSpaces = (num: number) => {
   const spaceAfter = 3
@@ -12,6 +13,11 @@ export const addSpaces = (num: number) => {
     rev.splice(spaceAfter * i, 0, ' ')
   }
   return rev.reverse().join('')
+}
+
+const addSpacesToFloat = (num: number) => {
+  const arStr = num.toFixed(2).split('.')
+  return [addSpaces(parseInt(arStr[0])), arStr[1]].join(',')
 }
 
 const Loan = () => {
@@ -48,7 +54,7 @@ const Loan = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'row' }}>
+      <div className='container'>
         <div className='wrapper'>
           <Form>
             <Row>
@@ -122,31 +128,22 @@ const Loan = () => {
                     ensure * (ensurance ? 1 : 0)
                   } ${units}/měsíčně**, poplatek za sjednání
                   online **0 ${units}**, celkem zaplatíte **${((months, calc) => {
-                    const comp = months * calc + ensure * (ensurance ? 1 : 0)
-                    const arStr = comp.toFixed(2).split('.')
-                    return [addSpaces(parseInt(arStr[0])), arStr[1]].join(',')
+                    return addSpacesToFloat(months * calc + ensure * (ensurance ? 1 : 0))
                   })(termMonths, calc)} ${units}**.`}
                 </ReactMarkdown>
               </Col>
             </Row>
           </Form>
         </div>
-        <div
-          style={{
-            width: '20rem',
-            backgroundColor: '#140757',
-            display: 'flex',
-            flexDirection: 'column',
-            margin: '2rem',
-          }}
-        >
+        <Result>
           <Title level={4} style={{ color: 'white', margin: 'auto' }}>
             Měsíčně zaplatíte
           </Title>
           <Title level={1} style={{ color: 'white', margin: 'auto', fontWeight: 300 }}>
-            {`${calc} Kč`}
+            {`${addSpacesToFloat(calc)} Kč`}
           </Title>
-        </div>
+          <Button className='green-button'>POKRAČOVAT</Button>
+        </Result>
       </div>
       <Paragraph>
         Výše uvedené splátky je pouze orientační a od výsledné schválené výše splátky se může lišit.
@@ -155,5 +152,13 @@ const Loan = () => {
     </div>
   )
 }
+
+const Result = styled.div`
+  width: 20rem;
+  background-color: #140757;
+  display: flex;
+  flex-direction: column;
+  margin: 2rem;
+`
 
 export default Loan

@@ -28,7 +28,7 @@ const CustomSlider = ({
   setInputValue,
   under,
 }: Props) => {
-  const { Title } = Typography
+  const { Title, Text } = Typography
   const marks: Record<string | number, ReactNode | MarkObj> = {}
   marks[min] = (
     <div style={{ width: 'fit', marginLeft: '3.5rem' }}>{addSpaces(min) + ' ' + units}</div>
@@ -95,22 +95,23 @@ const CustomSlider = ({
             value={typeof inputValue === 'number' ? inputValue : min}
           ></Slider>
         </Col>
-        <Col span={5}>
+        <Col span={6}>
           <Form.Item validateStatus={error} help={help}>
             <Input
               // min={min}
               // max={max}
               style={{
                 margin: '0 16px',
-                width: '7rem',
+                width: '5rem',
+                display: 'inline-block',
               }}
               value={addSpaces(inputValue)}
               onKeyPress={onKeyPress}
               onChange={onChange}
             />
+            <Text strong>{units}</Text>
           </Form.Item>
         </Col>
-        <Col span={1}>{units}</Col>
       </Row>
       {under && (
         <Row>
