@@ -1,4 +1,4 @@
-import { Col, Form, InputNumber, Row, Slider, Typography } from 'antd'
+import { Col, Form, Input, Row, Slider, Typography } from 'antd'
 import { Dispatch, KeyboardEvent, ReactNode, SetStateAction, useState } from 'react'
 import { MarkObj } from 'rc-slider/lib/Marks'
 import { ValidateStatus } from 'antd/lib/form/FormItem'
@@ -46,7 +46,20 @@ const CustomSlider = ({
   )
   const [error, setError] = useState<ValidateStatus>()
   const [help, setHelp] = useState('')
-  const onChange = (newValue: number) => {
+  const onChange = (e: KeyboardEvent<HTMLInputElement>) => {
+    const value = parseInt(e.currentTarget.value.replaceAll(' ', ''))
+    if (value < min || value > max) {
+      setError('error')
+      setHelp(helpS.change)
+      setTimeout(() => {
+        setError(undefined)
+        setHelp('')
+      }, 1000)
+      return
+    }
+    setInputValue(value)
+  }
+  const onChangeSlider = (newValue: number) => {
     if (newValue < min || newValue > max) {
       setError('error')
       setHelp(helpS.change)
@@ -85,21 +98,21 @@ const CustomSlider = ({
             max={max}
             step={step}
             tooltipVisible={false}
-            onChange={onChange}
+            onChange={onChangeSlider}
             marks={marks}
             value={typeof inputValue === 'number' ? inputValue : min}
           ></Slider>
         </Col>
         <Col span={5}>
           <Form.Item validateStatus={error} help={help}>
-            <InputNumber
-              min={min}
-              max={max}
+            <Input
+              // min={min}
+              // max={max}
               style={{
                 margin: '0 16px',
                 width: '7rem',
               }}
-              value={typeof inputValue === 'number' ? inputValue : min}
+              value={addSpaces(inputValue)}
               onKeyPress={onKeyPress}
               onChange={onChange}
             />
@@ -109,8 +122,8 @@ const CustomSlider = ({
       </Row>
       {under && (
         <Row>
-          <Col span={16}></Col>
-          <Col span={1}>{under}</Col>
+          <Col span={18}></Col>
+          <Col span={2}>{under}</Col>
         </Row>
       )}
     </>

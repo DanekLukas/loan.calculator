@@ -56,7 +56,9 @@ const Loan = () => {
               setInputValue={setPaid}
               under={(() => {
                 const years = Math.floor(paid / 12)
-                return years > 1 ? years + ' let' : undefined
+                return years > 1
+                  ? years + [' rok', ' roky', ' let'][0 + (years > 1 ? 1 : 0) + (years > 4 ? 1 : 0)]
+                  : undefined
               })()}
             />
             <Row>
