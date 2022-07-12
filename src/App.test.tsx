@@ -1,13 +1,13 @@
 import { Provider } from 'react-redux'
 import { render } from '@testing-library/react'
 import { store } from './app/store'
-import App from './App'
+import Loan from './app/Loan'
 import React from 'react'
 
 test('renders learn react link', () => {
   const { getByText } = render(
     <Provider store={store}>
-      <App />
+      <Loan />
     </Provider>
   )
 

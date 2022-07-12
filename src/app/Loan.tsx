@@ -1,9 +1,11 @@
 import './index.css'
 import { Button, Col, Form, Radio, Row, Space, Typography } from 'antd'
+import { RadioChangeEvent } from 'antd/lib/radio'
+import { loanAsync, selectCalc } from '../features/loan/loanSlice'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { useEffect, useState } from 'react'
 import CustomSlider from './Component/CustomSlider'
 import ReactMarkdown from 'react-markdown'
-import axios from 'axios'
 import styled from '@emotion/styled'
 
 export const addSpaces = (num: number) => {
@@ -31,6 +33,9 @@ const Loan = () => {
   const rate = 6
   const ensure = 4500
 
+  const dispatch = useAppDispatch()
+  const { calcRedux } = useAppSelector(selectCalc)
+
   const [amount, setAmount] = useState(initVal)
   const [termMonths, setTermMonths] = useState(initValM)
   const [ensurance, setEnsurance] = useState(false)
@@ -39,19 +44,24 @@ const Loan = () => {
   const { Paragraph, Title } = Typography
 
   useEffect(() => {
-    const getCalc = async () => {
-      const { data } = (
-        await axios.post('http://localhost:8190/calc', {
-          amount: amount,
-          rate: rate,
-          termMonths: termMonths,
-        })
-      ).data as { data?: number; error?: string }
-      setCalc(data || 0)
-    }
-    getCalc()
-  }, [amount, termMonths, ensurance])
+    setCalc(calcRedux)
+  }, [calcRedux])
 
+  useEffect(() => {
+    dispatch(
+      loanAsync({
+        amount: amount,
+        rate: rate,
+        termMonths: termMonths,
+      })
+    )
+  }, [amount, termMonths, ensurance, dispatch])
+
+  const onChangeEnsurance = (e: RadioChangeEvent) => {
+    setEnsurance(e.target.value)
+  }
+
+  useEffect(() => {}, [amount])
   return (
     <div>
       <div className='container'>
@@ -113,7 +123,7 @@ const Loan = () => {
             </Row>
             <Row>
               <Col span={20}>
-                <Radio.Group onChange={e => setEnsurance(e.target.value)} value={ensurance}>
+                <Radio.Group onChange={onChangeEnsurance} value={ensurance}>
                   <Space direction='horizontal'>
                     <Radio value={true}>S pojištěním</Radio>
                     <Radio value={false}>Bez pojištění</Radio>

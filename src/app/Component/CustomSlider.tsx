@@ -1,5 +1,5 @@
 import { Col, Form, Input, Row, Slider, Typography } from 'antd'
-import { Dispatch, KeyboardEvent, ReactNode, SetStateAction, useState } from 'react'
+import { KeyboardEvent, ReactNode, useState } from 'react'
 import { MarkObj } from 'rc-slider/lib/Marks'
 import { ValidateStatus } from 'antd/lib/form/FormItem'
 import { addSpaces } from '../Loan'
@@ -13,7 +13,8 @@ type Props = {
   step: number
   initVal: number
   inputValue: number
-  setInputValue: Dispatch<SetStateAction<number>>
+  // setInputValue: (value: number) => void
+  setInputValue: React.Dispatch<React.SetStateAction<number>>
   under?: ReactNode
 }
 
