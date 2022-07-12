@@ -1,10 +1,10 @@
 import './index.css'
 import { Button, Col, Form, Radio, Row, Space, Typography } from 'antd'
 import { RadioChangeEvent } from 'antd/lib/radio'
-import { loanAsync, selectCalc } from '../features/loan/loanSlice'
+import { loanAsync, selectCalc, selectStatus } from './redux/loanSlice'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { useEffect, useState } from 'react'
-import CustomSlider from './Component/CustomSlider'
+import CustomSlider from './component/CustomSlider'
 import ReactMarkdown from 'react-markdown'
 import styled from '@emotion/styled'
 
@@ -35,11 +35,13 @@ const Loan = () => {
 
   const dispatch = useAppDispatch()
   const { calcRedux } = useAppSelector(selectCalc)
+  const { statusRedux } = useAppSelector(selectStatus)
 
+  const [res, setRes] = useState('')
   const [amount, setAmount] = useState(initVal)
   const [termMonths, setTermMonths] = useState(initValM)
   const [ensurance, setEnsurance] = useState(false)
-  const [calc, setCalc] = useState(0.0)
+  const [calc, setCalc] = useState(calcRedux)
 
   const { Paragraph, Title } = Typography
 
@@ -60,6 +62,11 @@ const Loan = () => {
   const onChangeEnsurance = (e: RadioChangeEvent) => {
     setEnsurance(e.target.value)
   }
+
+  useEffect(() => {
+    const tmp = statusRedux === 'loading' ? 'Načítám ...' : `${addSpacesToFloat(calc)} Kč`
+    setRes(tmp)
+  }, [statusRedux, calc])
 
   useEffect(() => {}, [amount])
   return (
@@ -150,7 +157,7 @@ const Loan = () => {
             Měsíčně zaplatíte
           </Title>
           <Title level={1} style={{ color: 'white', margin: 'auto', fontWeight: 300 }}>
-            {`${addSpacesToFloat(calc)} Kč`}
+            {res}
           </Title>
           <Button className='green-button'>POKRAČOVAT</Button>
         </Result>

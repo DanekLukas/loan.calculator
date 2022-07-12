@@ -8,7 +8,7 @@
   align-items: 'row';
 }
 
-.green-button {
+.green-button, .green-button:hover, .green-button:focus {
   width: fit;
   background-color: #3FB360;
   color: #fff;

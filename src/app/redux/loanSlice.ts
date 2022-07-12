@@ -40,8 +40,6 @@ export const loanSlice = createSlice({
     setCalc: (state, action: PayloadAction<number>) => {
       state.calc = action.payload
     },
-
-    total: (state, action: PayloadAction<LoanState>) => {},
   },
   extraReducers: builder => {
     builder
@@ -60,6 +58,10 @@ export const loanSlice = createSlice({
 
 export const selectCalc = (state: { loan: LoanState }) => {
   return { calcRedux: state.loan.calc }
+}
+
+export const selectStatus = (state: { loan: LoanState }) => {
+  return { statusRedux: state.loan.status }
 }
 
 export default loanSlice.reducer
