@@ -140,14 +140,16 @@ const Loan = () => {
             </Row>
             <Row>
               <Col span={21}>
-                <ReactMarkdown>
-                  {`Úroková sazba od **${rate} %** RPSN od **7.11 %** pojištění **${
-                    ensure * (ensurance ? 1 : 0)
-                  } ${units}/měsíčně**, poplatek za sjednání
+                <div style={{ width: '46rem' }}>
+                  <ReactMarkdown>
+                    {`Úroková sazba od **${rate} %** RPSN od **7.11 %** pojištění **${
+                      ensure * (ensurance ? 1 : 0)
+                    } ${units}/měsíčně**, poplatek za sjednání
                   online **0 ${units}**, celkem zaplatíte **${((months, calc) => {
-                    return addSpacesToFloat(months * calc + ensure * (ensurance ? 1 : 0))
-                  })(termMonths, calc)} ${units}**.`}
-                </ReactMarkdown>
+                      return addSpacesToFloat(months * calc + ensure * (ensurance ? 1 : 0))
+                    })(termMonths, calc)} ${units}**.`}
+                  </ReactMarkdown>
+                </div>
               </Col>
             </Row>
           </Form>
@@ -162,7 +164,7 @@ const Loan = () => {
           <Button className='green-button'>POKRAČOVAT</Button>
         </Result>
       </div>
-      <Paragraph>
+      <Paragraph style={{ paddingLeft: '2rem' }}>
         Výše uvedené splátky je pouze orientační a od výsledné schválené výše splátky se může lišit.
         Pokud si zvolíte delší ...
       </Paragraph>
@@ -172,6 +174,7 @@ const Loan = () => {
 
 const Result = styled.div`
   width: 20rem;
+  max-width: 20rem;
   background-color: #140757;
   display: flex;
   flex-direction: column;

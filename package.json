@@ -16,6 +16,7 @@
     "@typescript-eslint/parser": "^5.13.0",
     "antd": "^4.21.6",
     "axios": "^0.27.2",
+    "craco": "^0.0.3",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "^7.0.0",
@@ -33,9 +34,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "build-no-map": "GENERATE_SOURCEMAP=false craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "lint:fix": "eslint \"{src,scripts,cypress}/**/*.{js,ts,tsx}\" --fix"
   },

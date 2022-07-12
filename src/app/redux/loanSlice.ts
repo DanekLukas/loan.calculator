@@ -20,7 +20,7 @@ const initialState: LoanState = {
 export const loanAsync = createAsyncThunk('loan/total', async (state: Pass) => {
   const calculate = async () => {
     const { data } = (
-      await axios.post('http://localhost:8190/calc', {
+      await axios.post('/calc', {
         amount: state.amount,
         rate: state.rate,
         termMonths: state.termMonths,
