@@ -2,7 +2,7 @@ import { Col, Form, Input, Row, Slider, Typography } from 'antd'
 import { KeyboardEvent, ReactNode, useState } from 'react'
 import { MarkObj } from 'rc-slider/lib/Marks'
 import { ValidateStatus } from 'antd/lib/form/FormItem'
-import { addSpaces } from '../Loan'
+import { addSpaces } from '../utils'
 
 type Props = {
   title: string

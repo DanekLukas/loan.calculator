@@ -1,26 +1,13 @@
 import './index.css'
 import { Button, Col, Form, Radio, Row, Space, Typography } from 'antd'
 import { RadioChangeEvent } from 'antd/lib/radio'
+import { addSpacesToFloat } from './utils'
 import { loanAsync, selectCalc, selectStatus } from './redux/loanSlice'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { useEffect, useState } from 'react'
 import CustomSlider from './component/CustomSlider'
 import ReactMarkdown from 'react-markdown'
 import styled from '@emotion/styled'
-
-export const addSpaces = (num: number) => {
-  const spaceAfter = 3
-  const rev = num.toString().split('').reverse()
-  for (let i = Math.floor((rev.length - 1) / spaceAfter); i > 0; i--) {
-    rev.splice(spaceAfter * i, 0, ' ')
-  }
-  return rev.reverse().join('')
-}
-
-const addSpacesToFloat = (num: number) => {
-  const arStr = num.toFixed(2).split('.')
-  return [addSpaces(parseInt(arStr[0])), arStr[1]].join(',')
-}
 
 const Loan = () => {
   const min = 20000
