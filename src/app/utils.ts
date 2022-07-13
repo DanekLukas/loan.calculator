@@ -2,7 +2,7 @@ export const addSpaces = (num: number) => {
   const spaceAfter = 3
   const rev = num.toString().split('').reverse()
   for (let i = Math.floor((rev.length - 1) / spaceAfter); i > 0; i--) {
-    rev.splice(spaceAfter * i, 0, ' ')
+    rev.splice(spaceAfter * i, 0, '\u00a0')
   }
   return rev.reverse().join('')
 }
